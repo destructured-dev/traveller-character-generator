@@ -12,6 +12,14 @@ export interface Skill {
     rating: number
 };
 
+export interface LogItem {
+    term: number,
+    type: "skill" | "stat" | "benefit" | "rank"
+    name: string,
+    from?: number,
+    to?: number
+}
+
 export interface GeneratorSliceState {
   terms: number,
   name: string,
@@ -28,7 +36,8 @@ export interface GeneratorSliceState {
   skills: Array<Skill>,
   benefits: Array<String>,
   draft: boolean,
-  complete: boolean
+  complete: boolean,
+  log: Array<LogItem>
 };
 
 const initialState: GeneratorSliceState = {
@@ -48,6 +57,7 @@ const initialState: GeneratorSliceState = {
   benefits: [],
   draft: false,
   complete: false,
+  log: []
 };
 
 
@@ -191,7 +201,12 @@ export const counterSlice = createAppSlice({
 
     toggleComplete: create.reducer(state => {
         state.complete === true ? state.complete = false : state.complete = true;
+    }),
+
+    addLogItem: create.reducer((state, action: PayloadAction<LogItem>) => {        
+        state.log.push(action.payload);
     })
+
 
   }),
   // You can define your selectors here. These selectors receive the slice
