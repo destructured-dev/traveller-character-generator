@@ -86,13 +86,16 @@ export const counterSlice = createAppSlice({
         state.currentCareer = action.payload;
     }),
 
-    // TODO: expand to add career to array if not found
     incrementCareerLevel: create.reducer((state, action: PayloadAction<string>) => {
         let foundItem = state.careers.find((career) => career.name === action.payload);
         if(foundItem) {
             foundItem.terms += 1;
         } else {
-
+            let newCareer = {
+                "name": action.payload,
+                "terms": 1
+            }
+           state.careers.push(newCareer) 
         }
     }),
 
@@ -191,9 +194,50 @@ export const counterSlice = createAppSlice({
         state.psi = action.payload;
     }),
 
-    //TODO: Add reducers for skills
+    incrementSkill: create.reducer((state, action: PayloadAction<string>) => {
+        let foundItem = state.skills.find((skill) => skill.name === action.payload);
+        if(foundItem) {
+            foundItem.rating += 1;
+        } else {
+            let newSkill = {
+                "name": action.payload,
+                "rating": 0
+            };
+            state.skills.push(newSkill);
+        }
+    }),
 
-    //TODO: Add reducers for benefits
+    decrementSkill: create.reducer((state, action: PayloadAction<string>) => {
+        let foundItem = state.skills.find((skill) => skill.name === action.payload);
+        if(foundItem) {
+            foundItem.rating -= 1;
+        };
+    }),
+
+    setSkillLevel: create.reducer((state, action: PayloadAction<Skill>) => {
+        let foundItem = state.skills.find((skill) => skill.name === action.payload.name);
+        if(foundItem) {
+            foundItem.rating = action.payload.rating;
+        } else {
+            let newSkill = {
+                "name": action.payload.name,
+                "rating": action.payload.rating
+            }
+            state.skills.push(newSkill);
+        }
+    }),
+
+    addBenefit: create.reducer((state, action: PayloadAction<string>) => {
+       state.benefits.push(action.payload);
+    }),
+
+    removeBenefit: create.reducer((state, action: PayloadAction<string>) => {
+        let foundItem = state.benefits.find((benefit) => benefit = action.payload);
+        if(foundItem) {
+            const index = state.benefits.indexOf(foundItem);
+            delete state.benefits[index];
+        }
+    }),
 
     toggleDraft: create.reducer(state => {
         state.draft === true ? state.draft = false : state.draft = true;
@@ -207,6 +251,7 @@ export const counterSlice = createAppSlice({
         state.log.push(action.payload);
     })
 
+    // TODO - Remove log item - consider if log items require ids or if can just remove all term items.
 
   }),
   // You can define your selectors here. These selectors receive the slice
@@ -217,7 +262,7 @@ export const counterSlice = createAppSlice({
 })
 
 // Action creators are generated for each case reducer function.
-export const {  } =
+export const { incrementTerms, decrementTerms, setTerms, setName, setCurrentCareer, incrementCareerLevel, decrementCareerLevel, setHomeSystem, incrementStr, decrementStr, setStr, incrementDex, decrementDex, setDex, incrementEnd, decrementEnd, setEnd, incrementInt, decrementInt, setInt, incrementEdu, decrementEdu, setEdu, incrementSoc, decrementSoc, setSoc,  incrementPsi, decrementPsi, setPsi, incrementSkill, decrementSkill, setSkillLevel, addBenefit, removeBenefit, toggleDraft, toggleComplete, addLogItem} =
   counterSlice.actions
 
 // Selectors returned by `slice.selectors` take the root state as their first argument.
