@@ -305,6 +305,7 @@ export const counterSlice = createAppSlice({
         //TODO select log items based on term number.
     }
 
+    
   },
 })
 
