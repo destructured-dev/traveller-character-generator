@@ -1,6 +1,5 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createAppSlice } from "../../app/createAppSlice";
-import type { AppThunk } from "../../app/store";
 
 export interface Career {
     name: string,
@@ -232,7 +231,7 @@ export const counterSlice = createAppSlice({
     }),
 
     removeBenefit: create.reducer((state, action: PayloadAction<string>) => {
-        let foundItem = state.benefits.find((benefit) => benefit = action.payload);
+        let foundItem = state.benefits.find((benefit) => benefit === action.payload);
         if(foundItem) {
             const index = state.benefits.indexOf(foundItem);
             delete state.benefits[index];
@@ -257,25 +256,113 @@ export const counterSlice = createAppSlice({
   // You can define your selectors here. These selectors receive the slice
   // state as their first argument.
   selectors: {
-    
+    selectTerms: generator => generator.terms,
+    selectName: generator => generator.name,
+    selectCurrentCareer: generator => generator.currentCareer,
+    selectCareerLevel: (generator, careerName) => {
+        const foundItem = generator.careers.find((career) => career === careerName);
+        if (foundItem) {
+            foundItem.terms
+        }
+    },
+    selectCareers: generator => generator.careers,
+    selectHomeSystem: generator => generator.homeSystem,
+    selectStr: generator => generator.str,
+    selectDex: generator => generator.dex,
+    selectEnd: generator => generator.end,
+    selectInt: generator => generator.int,
+    selectEdu: generator => generator.edu,
+    selectSoc: generator => generator.soc,
+    selectPsi: generator => generator.psi,
+    selectSkillLevel: (generator, skillName) => {
+        const foundItem = generator.skills.find((skill) => skill === skillName);
+        if (foundItem) {
+            foundItem.rating
+        }
+    },
+    selectSkillExists: (generator, skillName) => {
+        const foundItem = generator.skills.find((skill) => skill === skillName);
+        if (foundItem) {
+            true;
+        } else {
+            false;
+        }
+    },
+    selectSkill: generator => generator.skills,
+    selectBenefitExists: (generator, benefitName) => {
+        const foundItem = generator.benefits.find((benefit) => benefit === benefitName);
+        if (foundItem) {
+            true;
+        } else {
+            false;
+        }
+    },
+    selectBenefits: generator => generator.benefits,
+    selectDraft: generator => generator.draft,
+    selectComplete: generator => generator.complete,
+    selectLog: generator => generator.log,
+    selectLogTerm: (generator, term:number) => {
+        //TODO select log items based on term number.
+    }
+
   },
 })
 
 // Action creators are generated for each case reducer function.
-export const { incrementTerms, decrementTerms, setTerms, setName, setCurrentCareer, incrementCareerLevel, decrementCareerLevel, setHomeSystem, incrementStr, decrementStr, setStr, incrementDex, decrementDex, setDex, incrementEnd, decrementEnd, setEnd, incrementInt, decrementInt, setInt, incrementEdu, decrementEdu, setEdu, incrementSoc, decrementSoc, setSoc,  incrementPsi, decrementPsi, setPsi, incrementSkill, decrementSkill, setSkillLevel, addBenefit, removeBenefit, toggleDraft, toggleComplete, addLogItem} =
-  counterSlice.actions
+export const { 
+    incrementTerms, 
+    decrementTerms, 
+    setTerms, 
+    setName, 
+    setCurrentCareer, 
+    incrementCareerLevel, 
+    decrementCareerLevel, 
+    setHomeSystem, 
+    incrementStr, 
+    decrementStr, 
+    setStr, 
+    incrementDex, 
+    decrementDex, 
+    setDex, 
+    incrementEnd, 
+    decrementEnd, 
+    setEnd, 
+    incrementInt, 
+    decrementInt, 
+    setInt, 
+    incrementEdu, 
+    decrementEdu, 
+    setEdu, 
+    incrementSoc, 
+    decrementSoc, 
+    setSoc,  
+    incrementPsi, 
+    decrementPsi, 
+    setPsi, 
+    incrementSkill, 
+    decrementSkill, 
+    setSkillLevel, 
+    addBenefit, 
+    removeBenefit, 
+    toggleDraft, 
+    toggleComplete, 
+    addLogItem
+} = counterSlice.actions
 
 // Selectors returned by `slice.selectors` take the root state as their first argument.
-export const {  } = counterSlice.selectors
+export const { 
+    selectTerms, 
+    selectCurrentCareer, 
+    selectCareerLevel,
+    selectCareers,
+    selectHomeSystem,
+    selectStr,
+    selectDex,
+    selectEnd,
+    selectInt,
+    selectEdu,
+    selectSoc,
+    selectPsi,
+} = counterSlice.selectors
 
-// We can also write thunks by hand, which may contain both sync and async logic.
-// Here's an example of conditionally dispatching actions based on current state.
-// export const incrementIfOdd =
-//   (amount: number): AppThunk =>
-//   (dispatch, getState) => {
-//     const currentValue = selectCount(getState())
 
-//     if (currentValue % 2 === 1 || currentValue % 2 === -1) {
-//       dispatch(incrementByAmount(amount))
-//     }
-//   }
