@@ -11,8 +11,11 @@ export interface Skill {
     rating: number
 };
 
-export interface LogItem {
+export interface LogTerm {
     term: number,
+    items: Array<LogItem>
+}
+export interface LogItem {
     type: "skill" | "stat" | "benefit" | "rank"
     name: string,
     from?: number,
@@ -36,7 +39,7 @@ export interface GeneratorSliceState {
   benefits: Array<String>,
   draft: boolean,
   complete: boolean,
-  log: Array<LogItem>
+  log: Array<LogTerm>
 };
 
 const initialState: GeneratorSliceState = {
@@ -246,11 +249,11 @@ export const counterSlice = createAppSlice({
         state.complete === true ? state.complete = false : state.complete = true;
     }),
 
-    addLogItem: create.reducer((state, action: PayloadAction<LogItem>) => {        
-        state.log.push(action.payload);
-    })
+    // addLogItem: create.reducer((state, action: PayloadAction<LogItem>) => {        
+    //     state.log.push(action.payload);
+    // })
 
-    // TODO - Remove log item - consider if log items require ids or if can just remove all term items.
+    // TODO - Rewrite log to have terms and items in depth
 
   }),
   // You can define your selectors here. These selectors receive the slice
@@ -305,7 +308,7 @@ export const counterSlice = createAppSlice({
         //TODO select log items based on term number.
     }
 
-    
+
   },
 })
 
