@@ -11,11 +11,9 @@ export interface Skill {
     rating: number
 };
 
-export interface LogTerm {
-    term: number,
-    items: Array<LogItem>
-}
 export interface LogItem {
+    id: string,
+    term: number,
     type: "skill" | "stat" | "benefit" | "rank"
     name: string,
     from?: number,
@@ -39,7 +37,7 @@ export interface GeneratorSliceState {
   benefits: Array<String>,
   draft: boolean,
   complete: boolean,
-  log: Array<LogTerm>
+  log: Array<LogItem>
 };
 
 const initialState: GeneratorSliceState = {
@@ -238,7 +236,7 @@ export const counterSlice = createAppSlice({
         if(foundItem) {
             const index = state.benefits.indexOf(foundItem);
             delete state.benefits[index];
-        }
+        };
     }),
 
     toggleDraft: create.reducer(state => {
@@ -249,11 +247,27 @@ export const counterSlice = createAppSlice({
         state.complete === true ? state.complete = false : state.complete = true;
     }),
 
-    // addLogItem: create.reducer((state, action: PayloadAction<LogItem>) => {        
-    //     state.log.push(action.payload);
-    // })
+    addLogItem: create.reducer((state, action: PayloadAction<LogItem>) => {        
+        state.log.push(action.payload);
+    }),
 
-    // TODO - Rewrite log to have terms and items in depth
+    removeLogItem: create.reducer((state, action: PayloadAction<string>) => {
+        let foundItem = state.log.find((item) => item.id === action.payload);
+        if(foundItem) {
+            const index = state.log.indexOf(foundItem);
+            delete state.log[index];
+        };
+    }),
+
+    removeLogItemsByTerm: create.reducer((state, action: PayloadAction<number>) =>{
+        let foundItems = state.log.filter(item => item.term === action.payload)
+        for(let i = 0;i<foundItems.length;i++) {
+            let logIndex = state.log.indexOf(foundItems[i]);
+            delete state.log[logIndex];
+        }
+    })
+
+    
 
   }),
   // You can define your selectors here. These selectors receive the slice
@@ -291,7 +305,7 @@ export const counterSlice = createAppSlice({
             false;
         }
     },
-    selectSkill: generator => generator.skills,
+    selectSkills: generator => generator.skills,
     selectBenefitExists: (generator, benefitName) => {
         const foundItem = generator.benefits.find((benefit) => benefit === benefitName);
         if (foundItem) {
@@ -305,10 +319,8 @@ export const counterSlice = createAppSlice({
     selectComplete: generator => generator.complete,
     selectLog: generator => generator.log,
     selectLogTerm: (generator, term:number) => {
-        //TODO select log items based on term number.
+        generator.log.filter(item => item.term === term )        
     }
-
-
   },
 })
 
@@ -350,7 +362,9 @@ export const {
     removeBenefit, 
     toggleDraft, 
     toggleComplete, 
-    addLogItem
+    addLogItem,
+    removeLogItem,
+    removeLogItemsByTerm
 } = counterSlice.actions
 
 // Selectors returned by `slice.selectors` take the root state as their first argument.
@@ -367,6 +381,15 @@ export const {
     selectEdu,
     selectSoc,
     selectPsi,
+    selectSkillLevel,
+    selectSkillExists,
+    selectSkills,
+    selectBenefitExists,
+    selectBenefits,
+    selectDraft,
+    selectComplete,
+    selectLog,
+    selectLogTerm
 } = counterSlice.selectors
 
 
