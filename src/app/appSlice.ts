@@ -1,9 +1,10 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { createAppSlice } from "../../app/createAppSlice";
+import { createAppSlice } from "./createAppSlice";
 
 export interface Career {
     name: string,
-    terms: number
+    terms: number,
+    rank: number
 };
 
 export interface Skill {
@@ -91,9 +92,10 @@ export const counterSlice = createAppSlice({
         if(foundItem) {
             foundItem.terms += 1;
         } else {
-            let newCareer = {
+            let newCareer: Career = {
                 "name": action.payload,
-                "terms": 1
+                "terms": 1,
+                "rank": 0
             }
            state.careers.push(newCareer) 
         }
@@ -103,6 +105,20 @@ export const counterSlice = createAppSlice({
         let foundItem = state.careers.find((career) => career.name === action.payload);
         if(foundItem) {
             foundItem.terms -= 1;
+        }
+    }),
+
+    incrementCareerRank: create.reducer((state, action: PayloadAction<string>) => {
+        let foundItem = state.careers.find((career) => career.name === action.payload);
+        if(foundItem) {
+            foundItem.rank += 1;
+        }
+    }),
+
+    decrementCareerRank: create.reducer((state, action: PayloadAction<string>) => {
+        let foundItem = state.careers.find((career) => career.name === action.payload);
+        if(foundItem && foundItem.rank > 0) {
+            foundItem.rank -= 1;
         }
     }),
 
