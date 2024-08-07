@@ -399,14 +399,13 @@ export const careers = [
     mishaps: {
       1: {
         type: "injury",
-        roll: false,
-        result: 2,
-        text: "Severely injured (this is the same as a result of 2 on the injury table).",
+        rollType: "double",
       },
       2: {
         type: "choice",
         choices: {
           1: {
+            type: "injury",
             results: [
               {
                 type: "none",
@@ -414,21 +413,28 @@ export const careers = [
             ],
           },
           2: {
-            results: [
-              {
-                type: "injury",
-                roll: false,
-                result: 2,
+            type: "choose",
+            choices: {
+              1: {
+                results: null,
               },
-              {
-                type: "benefit",
-                name: "enemy",
+              2: {
+                results: [
+                  {
+                    type: "injury",
+                    rollType: "double",
+                  },
+                  {
+                    type: "benefit",
+                    name: "Enemy",
+                  },
+                  {
+                    type: "skill",
+                    name: "Any",
+                  },
+                ],
               },
-              {
-                type: "skill",
-                name: "any",
-              },
-            ],
+            },
           },
         },
       },
@@ -436,8 +442,38 @@ export const careers = [
         type: "roll",
         rolltype: "skill",
         name: "Advocate",
-        value: 8,
-        results: {},
+        results: {
+          2: {
+            type: "career",
+            name: "Prisoner",
+          },
+          8: {
+            type: "benefit",
+          },
+        },
+      },
+      4: {
+        type: "gain",
+        results: [
+          {
+            type: "benefit",
+            name: "Enemy",
+          },
+          {
+            type: "skill",
+            name: "Deception",
+            value: 1,
+          },
+        ],
+      },
+      5: {
+        type: "descriptive",
+        results:
+          "Roll twice on the injury table for a Contact, Ally or family member.",
+      },
+      6: {
+        type: "injury",
+        rollType: "normal",
       },
     },
   },
