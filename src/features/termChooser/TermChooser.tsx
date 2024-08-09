@@ -9,8 +9,8 @@ export const TermChooser = () => {
           Choose an option
         </option>
         {careers.map(career => (
-          <option key={career} value={career}>
-            {career}
+          <option key={career.name} value={career.name}>
+            {career.name}
           </option>
         ))}
       </select>
