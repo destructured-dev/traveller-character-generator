@@ -1,3 +1,50 @@
+export interface Career {
+  name: string
+  preCareer: boolean
+  qualification: Qualification
+  assignments: Array<Assignment>
+}
+
+export interface SkillTable {
+  basic: boolean
+  assignment: string
+  items: Array<Item>
+}
+
+export interface Assignment {
+  name: string
+  survival: StatCheck
+  advancement: StatCheck
+  ranks: Array<Rank>
+}
+
+export interface Rank {
+  rank: number
+  name: string
+  bonus: Bonus
+}
+export interface StatCheck {
+  stat: string
+  value: number
+}
+
+export interface Bonus {
+  type: "none" | "stat" | "skill" | "benefit" | "benefitRoll"
+  name?: string
+  value?: number
+}
+
+export interface DiceModifier {
+  type: string
+  value: number
+}
+
+export interface Qualification {
+  stat: string
+  value: number
+  dms: DiceModifier
+}
+
 export const careers = [
   {
     name: "Agent",
@@ -7,9 +54,8 @@ export const careers = [
       value: 6,
       dms: [
         {
-          type: "previous",
-          value: 1,
-          sign: "negative",
+          type: "previousCareer",
+          value: -1,
         },
       ],
     },
@@ -24,14 +70,15 @@ export const careers = [
           stat: "INT",
           value: 6,
         },
-        ranks: {
-          0: {
+        ranks: [
+          {
+            rank: 0,
             name: "Rookie",
             bonus: {
               type: "none",
             },
           },
-          1: {
+          {
             rank: 1,
             name: "Corporal",
             bonus: {
@@ -40,19 +87,22 @@ export const careers = [
               value: 1,
             },
           },
-          2: {
+          {
+            rank: 2,
             name: "Sergeant",
             bonus: {
               type: "none",
             },
           },
-          3: {
+          {
+            rank: 3,
             name: "Detective",
             bonus: {
               type: "none",
             },
           },
-          4: {
+          {
+            rank: 4,
             name: "Lieutenant",
             bonus: {
               type: "skill",
@@ -60,7 +110,8 @@ export const careers = [
               value: 1,
             },
           },
-          5: {
+          {
+            rank: 5,
             name: "Chief",
             bonus: {
               type: "skill",
@@ -68,7 +119,8 @@ export const careers = [
               value: 1,
             },
           },
-          6: {
+          {
+            rank: 6,
             name: "Commissioner",
             bonus: {
               type: "stat",
@@ -76,7 +128,7 @@ export const careers = [
               value: 1,
             },
           },
-        },
+        ],
       },
       {
         name: "Intelligence",
@@ -88,14 +140,16 @@ export const careers = [
           stat: "INT",
           value: 5,
         },
-        ranks: {
-          0: {
+        ranks: [
+          {
+            rank: 0,
             name: "-",
             bonus: {
               type: "none",
             },
           },
-          1: {
+          {
+            rank: 1,
             name: "Agent",
             bonus: {
               type: "skill",
@@ -103,7 +157,8 @@ export const careers = [
               value: 1,
             },
           },
-          2: {
+          {
+            rank: 2,
             name: "Field Agent",
             bonus: {
               type: "skill",
@@ -111,13 +166,15 @@ export const careers = [
               value: 1,
             },
           },
-          3: {
+          {
+            rank: 3,
             name: "Field Agent",
             bonus: {
               type: "none",
             },
           },
-          4: {
+          {
+            rank: 4,
             name: "Special Agent",
             bonus: {
               type: "skill",
@@ -125,19 +182,21 @@ export const careers = [
               value: 1,
             },
           },
-          5: {
+          {
+            rank: 5,
             name: "Assistant Director",
             bonus: {
               type: "none",
             },
           },
-          6: {
+          {
+            rank: 6,
             name: "Director",
             bonus: {
               type: "none",
             },
           },
-        },
+        ],
       },
       {
         name: "Corporate",
@@ -149,14 +208,16 @@ export const careers = [
           stat: "INT",
           value: 7,
         },
-        ranks: {
-          0: {
+        ranks: [
+          {
+            rank: 0,
             name: "-",
             bonus: {
               type: "none",
             },
           },
-          1: {
+          {
+            rank: 1,
             name: "Agent",
             bonus: {
               type: "skill",
@@ -164,7 +225,8 @@ export const careers = [
               value: 1,
             },
           },
-          2: {
+          {
+            rank: 2,
             name: "Field Agent",
             bonus: {
               type: "skill",
@@ -172,13 +234,15 @@ export const careers = [
               value: 1,
             },
           },
-          3: {
+          {
+            rank: 3,
             name: "Field Agent",
             bonus: {
               type: "none",
             },
           },
-          4: {
+          {
+            rank: 4,
             name: "Special Agent",
             bonus: {
               type: "skill",
@@ -186,27 +250,27 @@ export const careers = [
               value: 1,
             },
           },
-          5: {
+          {
+            rank: 5,
             name: "Assistant Director",
             bonus: {
               type: "none",
             },
           },
-          6: {
+          {
+            rank: 6,
             name: "Director",
             bonus: {
               type: "none",
             },
           },
-        },
+        ],
       },
     ],
     skillTables: [
       {
         basic: false,
-        assignment: {
-          type: "any",
-        },
+        assignment: "any",
         items: {
           1: {
             type: "skill",
@@ -239,7 +303,7 @@ export const careers = [
         assignment: {
           type: "any",
         },
-        item: {
+        items: {
           1: {
             type: "skill",
             name: "Streetwise",

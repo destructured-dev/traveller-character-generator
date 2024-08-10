@@ -14,6 +14,7 @@ export const TermChooser = () => {
           </option>
         ))}
       </select>
+      <div>{careers}</div>
     </div>
   )
 }
