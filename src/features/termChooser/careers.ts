@@ -3,12 +3,26 @@ export interface Career {
   preCareer: boolean
   qualification: Qualification
   assignments: Array<Assignment>
+  officer: boolean
+  skillTables: Array<SkillTable>
+  mishaps: Array<Mishap>
 }
 
 export interface SkillTable {
   basic: boolean
-  assignment: string
-  items: Array<Item>
+  availability: string
+  items: Array<TrainingItem>
+}
+
+export interface AvailabilityItem {
+  type: "any" | "assignment" | "stat" | "officer"
+  name: string
+  value: number
+}
+
+export interface TrainingItem {
+  type: "skill" | "stat"
+  name: string
 }
 
 export interface Assignment {
@@ -59,6 +73,7 @@ export const careers = [
         },
       ],
     },
+    officer: false,
     assignments: [
       {
         name: "Law Enforcement",
@@ -270,7 +285,9 @@ export const careers = [
     skillTables: [
       {
         basic: false,
-        assignment: "any",
+        availability: {
+          type: "any",
+        },
         items: {
           1: {
             type: "skill",
@@ -300,7 +317,7 @@ export const careers = [
       },
       {
         basic: true,
-        assignment: {
+        availability: {
           type: "any",
         },
         items: {
@@ -331,7 +348,7 @@ export const careers = [
         },
       },
       {
-        assignment: {
+        availability: {
           type: "stat",
           name: "EDU",
           value: 8,
@@ -364,7 +381,7 @@ export const careers = [
         },
       },
       {
-        assignment: {
+        availability: {
           type: "assignment",
           name: "law enforcement",
         },
@@ -396,7 +413,7 @@ export const careers = [
         },
       },
       {
-        assignment: {
+        availability: {
           type: "assignment",
           name: "intelligence",
         },
@@ -428,7 +445,7 @@ export const careers = [
         },
       },
       {
-        assignment: {
+        availability: {
           type: "assignment",
           name: "corporate",
         },
