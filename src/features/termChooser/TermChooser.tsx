@@ -1,4 +1,5 @@
-import { careers } from "./careers"
+import { careers, Career } from "./careers"
+console.log(careers)
 
 export const TermChooser = () => {
   return (
@@ -14,7 +15,7 @@ export const TermChooser = () => {
           </option>
         ))}
       </select>
-      <div>{careers}</div>
+      <div>{careers[0].name}</div>
     </div>
   )
 }

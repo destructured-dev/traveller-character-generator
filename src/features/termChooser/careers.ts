@@ -8,6 +8,32 @@ export interface Career {
   mishaps: Array<Mishap>
 }
 
+export interface Event {
+  roll: number
+  type: string
+}
+
+export interface Mishap {
+  roll: number
+  type: "injury" | "injuryDouble" | "choice" | "test" | "gain"
+  testType?: string
+  name?: string
+  choices?: Array<Choice>
+  rollResults?: Array<Result>
+  description?: String
+}
+
+export interface Choice {
+  results: Array<Bonus>
+  description: string
+}
+
+export interface Result {
+  value: number
+  type: "stat" | "skill" | "benefit"
+  name: string
+}
+
 export interface SkillTable {
   basic: boolean
   availability: string
@@ -477,63 +503,70 @@ export const careers = [
         },
       },
     ],
-    mishaps: {
-      1: {
-        type: "injury",
-        rollType: "double",
+    mishaps: [
+      {
+        roll: 1,
+        type: "injuryDouble",
+        description: "Severely injured.",
       },
-      2: {
+      {
+        roll: 2,
         type: "choice",
-        choices: {
-          1: {
-            type: "injury",
+        choices: [
+          {
             results: [
               {
-                type: "none",
+                type: null,
               },
             ],
+            description:
+              "Accept the deal and leave Agent without further consequence.",
           },
-          2: {
-            type: "choose",
-            choices: {
-              1: {
-                results: null,
+          {
+            results: [
+              {
+                type: "injuryDouble",
               },
-              2: {
-                results: [
-                  {
-                    type: "injury",
-                    rollType: "double",
-                  },
-                  {
-                    type: "benefit",
-                    name: "Enemy",
-                  },
-                  {
-                    type: "skill",
-                    name: "Any",
-                  },
-                ],
+              {
+                type: "benefit",
+                name: "Enemy",
               },
-            },
+              {
+                type: "skill",
+                name: "Any",
+              },
+            ],
+            description: "",
           },
-        },
+        ],
+        description:
+          "A criminal or other figure under investigation offers you a deal. Accept and leave this career without further penalty (though without gaining a Benefit). Refuse and you must roll twice on the injury table and take the lower result. You gain an Enemy and one level in any skill you choose.",
       },
-      3: {
-        type: "roll",
-        rolltype: "skill",
+      {
+        roll: 3,
+        type: "test",
+        testType: "skill",
         name: "Advocate",
-        results: {
-          2: {
+        rollResults: [
+          {
+            value: 8,
+            type: "benefit",
+          },
+          {
+            value: 3,
+            type: null,
+          },
+          {
+            value: 2,
             type: "career",
             name: "Prisoner",
           },
-          8: {
-            type: "benefit",
-          },
-        },
+        ],
+        description:
+          "An investigation goes critically wrong or leads to the top, ruining your career. Roll Advocate 8+. If you succeed, you may keep the Benefit roll from this term. If you roll 2, you must take the Prisoner career in your next term.",
       },
-      4: {
+      {
+        roll: 4,
         type: "gain",
         results: [
           {
@@ -546,17 +579,166 @@ export const careers = [
             value: 1,
           },
         ],
+        description:
+          "You learn something you should not know and people want to kill you for it. Gain an Enemy and Deception 1",
       },
-      5: {
-        type: "descriptive",
-        results:
-          "Roll twice on the injury table for a Contact, Ally or family member.",
+      {
+        roll: 5,
+        type: null,
+        description:
+          "You work ends up coming home with you and someone gets hurt. Choose on of your Contacts, Allies or family members and roll twice on the injury table for them, taking the lower result.",
       },
-      6: {
+      {
+        roll: 6,
         type: "injury",
-        rollType: "normal",
+        description: "Injured. Roll on the injury table.",
       },
-    },
+    ],
+    events: [
+      {
+        roll: 2,
+        type: "mishap",
+        description:
+          "Disaster! Roll on the Mishap table, but you are not ejected from this career.",
+      },
+      {
+        roll: 3,
+        type: "rollChoice",
+        rolls: [
+          {
+            skill: "Investigate",
+            success: 8,
+          },
+          {
+            skill: "Streetwise",
+            success: 8,
+          },
+        ],
+        failure: "mishap",
+        success: {
+          type: "skill",
+          choices: ["Deception", "Jack-of-all-Trades", "Persuade", "Tactics"],
+        },
+        description:
+          "An investigation takes on a dangerous turn. Roll Investigate 8+ or Streetwise 8+. If you fail, roll on the Mishap table. If you succeed, increase one of these skills by one level: Deception, Jack-of-all-Trades, Persuade or Tactics.",
+      },
+      {
+        roll: 4,
+        type: "benefitDM",
+        value: 1,
+        description:
+          "You complete a mission for your superiouds and are suitably rewarded. Gain DM+1 to any one Benefit roll from this career.",
+      },
+      {
+        roll: 5,
+        type: "benefitVariable",
+        name: "Contact",
+        min: 1,
+        max: 3,
+        description: "You establish a network of contacts. Gain D3 contacts.",
+      },
+      {
+        roll: 6,
+        type: "checkStatForIncrease",
+        checkName: "EDU",
+        value: 8,
+        increaseType: "skillKnown",
+        increaseValue: 1,
+        description:
+          "You are given advanced training in a specialist field. Roll EDU 8+ to increase any one skill you already have by one level.",
+      },
+      {
+        roll: 7,
+        type: "lifeEvent",
+        description: "Life Event. Roll on the Life Events table.",
+      },
+      {
+        roll: 8,
+        type: "skillTest",
+        name: "Deception",
+        value: 8,
+        failure: [
+          {
+            type: "foreignMishapRollChoice",
+            choices: ["Rogue", "Citizen"],
+          },
+        ],
+        success: [
+          {
+            type: "foreignEventRollChoice",
+            choices: ["Rogue", "Citizen"],
+          },
+          {
+            type: "foreignSkillRollChoice",
+            choices: [
+              {
+                career: "Rogue",
+                assignments: ["Thief", "Enforcer", "Pirate"],
+              },
+              {
+                career: "Citizen",
+                assignments: ["Corporate", "Worker", "Colonist"],
+              },
+            ],
+          },
+        ],
+        description:
+          "You go undercover to investigate an enemy. Roll Deception 8+. If you succeed, roll immediately on the ROgue or Citizen Events table and make one roll on any specialist skil table for that career. If you fail, roll immediately on the Rogue or Citizen Mishap Table.",
+      },
+      {
+        roll: 9,
+        type: "advancementDM",
+        value: 2,
+        description:
+          "You go above and beyond the call of duty. Gain DM+2 to your next advancement roll.",
+      },
+      {
+        roll: 10,
+        type: "skillChoice",
+        choices: [
+          {
+            name: "Drive",
+            value: 1,
+          },
+          {
+            name: "Flyer",
+            value: 1,
+          },
+          {
+            name: "Pilot",
+            value: 1,
+          },
+          {
+            name: "Gunner",
+            value: 1,
+          },
+        ],
+        description:
+          "You are given specialist training in vehicles. Either increase Investigate by one level or DM+4 to an advancement roll thanks to their aid.",
+      },
+      {
+        roll: 11,
+        type: "openChoice",
+        choices: [
+          {
+            type: "skill",
+            name: "any",
+          },
+          {
+            type: "advancementDM",
+            value: 4,
+          },
+        ],
+        description:
+          "You are befriended by a senior agent. Either increase Investigate by one level or DM+4 to an advancement roll thanks to their aid.",
+      },
+      {
+        roll: 12,
+        type: "promotion",
+        description:
+          "Your efforts uncover a major conspiracy against your employers. You are automatically promoted.",
+      },
+    ],
   },
 
   // Citizen: {},
