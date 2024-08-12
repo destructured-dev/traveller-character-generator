@@ -13,9 +13,9 @@ export interface Event {
   roll: number
   type: string
   description: string
-  rolls?: Array<Roll>
-  failure?: Array<Fail>
-  success?: Array<Success>
+  // rolls?: Array<Roll>
+  // failure?: Array<Fail>
+  // success?: Array<Success>
   value?: number
   min?: number
   max?: number
