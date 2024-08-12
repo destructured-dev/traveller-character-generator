@@ -6,11 +6,23 @@ export interface Career {
   officer: boolean
   skillTables: Array<SkillTable>
   mishaps: Array<Mishap>
+  events: Array<Event>
 }
 
 export interface Event {
   roll: number
   type: string
+  description: string
+  rolls?: Array<Roll>
+  failure?: Array<Fail>
+  success?: Array<Success>
+  value?: number
+  min?: number
+  max?: number
+  checkName?: string
+  increaseType?: string
+  increaseValue?: number
+  choices?: Array<Choice>
 }
 
 export interface Mishap {
@@ -24,6 +36,11 @@ export interface Mishap {
 }
 
 export interface Choice {
+  type: string
+  name: string
+  value: number
+  career: string
+  assignment: string
   results: Array<Bonus>
   description: string
 }
